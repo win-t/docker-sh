@@ -2,7 +2,7 @@ DOCUMENTATION = '''
 ---
 module: docker_sh
 
-description: Manage running docker container using docker-sh (https://github.com/payfazz/docker-sh.git)
+description: Manage running docker container using docker-sh (https://github.com/win-t/docker-sh.git)
 
 options:
     path:
@@ -26,7 +26,7 @@ options:
         default: false
 
 author:
-    - Kurnia D Win (win@payfazz.com)
+    - Kurnia D Win (kurnia.d.win@gmail.com)
 '''
 
 EXAMPLES = '''

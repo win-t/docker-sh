@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Author: win@payfazz.com
-# source code is hosted on https://github.com/payfazz/docker-sh
+# Author: kurnia.d.win@gmail.com
+# source code is hosted on https://github.com/win-t/docker-sh
 
 # Note:
 # every code must compatible with POSIX shell
@@ -38,7 +38,7 @@ _help_str="Available commands:
 
 NOTE:
 - Custom command are not listed
-- See https://github.com/payfazz/docker-sh/blob/master/DOCS.md#available-command for more info.
+- See https://github.com/win-t/docker-sh/blob/master/DOCS.md#available-command for more info.
 "
 
 # this quote function copied from
@@ -538,7 +538,7 @@ if grep -qF 6245455020934bb2ad75ce52bbdc54b7 "$0" 2>/dev/null; then
     upgrade)
       set -x
       exec sh -c \
-        "curl -sSLf https://raw.githubusercontent.com/payfazz/docker-sh/master/install.sh | sudo sh -s - \"$0\""
+        "curl -sSLf https://raw.githubusercontent.com/win-t/docker-sh/master/install.sh | sudo sh -s - \"$0\""
       ;;
     locate)
       exec docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.initial_spec_file"}}' "${2:-}"

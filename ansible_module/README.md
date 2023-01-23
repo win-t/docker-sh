@@ -4,7 +4,7 @@
 
 Download `docker_sh.py` to your ansible library path
 
-    curl -sSLf https://raw.githubusercontent.com/payfazz/docker-sh/master/ansible_module/docker_sh.py > "$ANSIBLE_LIBRARY/docker_sh.py"
+    curl -sSLf https://raw.githubusercontent.com/win-t/docker-sh/master/ansible_module/docker_sh.py > "$ANSIBLE_LIBRARY/docker_sh.py"
 
 ## How to use
 

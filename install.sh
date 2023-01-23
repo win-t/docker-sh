@@ -14,7 +14,7 @@ if [ "$(basename "$0")" = "install.sh" ]; then
     fi
 fi
 
-[ $download = y ] && curl -sSLfo "$target" https://raw.githubusercontent.com/payfazz/docker-sh/master/docker.sh
+[ $download = y ] && curl -sSLfo "$target" https://raw.githubusercontent.com/win-t/docker-sh/master/docker.sh
 chmod 755 "$target"
 
 exit 0
