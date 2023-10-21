@@ -1,3 +1,10 @@
+## Deprecated
+this project predates [docker compose], most of the use cases are already covered by [docker compose]
+
+I'm no longer maintaining this project
+
+[docker compose]: https://docs.docker.com/compose/
+
 # Docker utility script
 
 This is simple POSIX script for managing docker container, just like `docker-compose` for single container, but more powerful.
