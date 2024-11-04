@@ -169,28 +169,6 @@ _exec_if_fn_exists() (
   return 0
 )
 
-_random() {
-  LC_ALL=C tr -cd '[:alnum:]' < /dev/urandom 2>/dev/null | head -c 16
-}
-
-_assert_local_docker() {
-  str=$(_random)
-  tmp_file=$(_random)
-  if [ -z "${dir:-}" ]; then
-    tmp_file="/tmp/$tmp_file"
-  else
-    tmp_file="$dir/$tmp_file"
-  fi
-  ( printf %s "$str" > "$tmp_file"; ) 2>/dev/null || return 1
-  str2=$(docker run \
-    --rm --entrypoint cat \
-    -v "$tmp_file:/tmp/test-file:ro" \
-    alpine /tmp/test-file 2>/dev/null
-  ) || :
-  rm -f "$tmp_file"
-  [ "$str" = "$str2" ]
-}
-
 _update() {
   if ! running "$name" && [ "${create_only:-}" != y ]; then
     echo "WARNING: Container is not running, running the container after update" >&2
@@ -202,7 +180,7 @@ _update() {
 
 _is_managed() {
   [ -n "${file:-}" ] && \
-  [ "$file" = "$(docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.initial_spec_file"}}' "$name" 2>/dev/null)" ]
+  [ "$file" = "$(docker inspect -f '{{index .Config.Labels "docker-sh.winto.dev/initial_spec_file"}}' "$name" 2>/dev/null)" ]
 }
 
 _main() {
@@ -221,9 +199,6 @@ _main() {
     start)
       if ! running "$name"; then
         if ! exists container "$name"; then
-          if [ "${must_local:-}" = "y" ]; then
-            _assert_local_docker || panic "docker daemon is not running on local machine"
-          fi
           if [ -z "${file:-}" ]; then file="/dev/null"; fi
           constructed_run_cmds=$(_construct_run_cmds) || exit $?
           _exec_if_fn_exists "pre_$action" run || exit $?
@@ -235,7 +210,7 @@ _main() {
           ""|container:*|bridge|host|none) : ;;
           *)  if ! exists network "$net"; then
                 docker network create --driver bridge \
-                  --label kurnia_d_win.docker.autoremove=true \
+                  --label docker-sh.winto.dev/autoremove=true \
                   "$net" >/dev/null \
                 || exit $?
               fi
@@ -243,8 +218,8 @@ _main() {
           esac
           eval "set -- $constructed_run_cmds"
           docker create \
-            --label "kurnia_d_win.docker.run_opts=$constructed_run_cmds" \
-            --label "kurnia_d_win.docker.initial_spec_file=$file" \
+            --label "docker-sh.winto.dev/run_opts=$constructed_run_cmds" \
+            --label "docker-sh.winto.dev/initial_spec_file=$file" \
             "$@" >/dev/null || exit $?
           _exec_if_fn_exists "pre_$action" created || exit $?
           [ "${create_only:-}" = "y" ] && exit 0
@@ -304,7 +279,7 @@ _main() {
           esac
           : $((i=i+1))
         done
-        saved_run_cmds=$(docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.run_opts"}}' "$name" 2>/dev/null) || :
+        saved_run_cmds=$(docker inspect -f '{{index .Config.Labels "docker-sh.winto.dev/run_opts"}}' "$name" 2>/dev/null) || :
         saved_run_cmds=$(no_proc=y quote "$saved_run_cmds")
         _exec_if_fn_exists "pre_$action" || exit $?
         docker rm $tmp_opts "$name" >/dev/null || exit $?
@@ -323,7 +298,7 @@ _main() {
           esac
           : $((i=i+1))
         done
-        if [ "$(docker network inspect -f '{{index .Labels "kurnia_d_win.docker.autoremove"}}{{.Containers|len}}' "$init_net" 2>/dev/null)" = true0 ]; then
+        if [ "$(docker network inspect -f '{{index .Labels "docker-sh.winto.dev/autoremove"}}{{.Containers|len}}' "$init_net" 2>/dev/null)" = true0 ]; then
           docker network rm "$init_net" >/dev/null 2>&1 || :
         fi
       fi
@@ -391,7 +366,7 @@ _main() {
       if exists container "$name"; then
         _is_managed || { printf "not_docker_sh\n"; exit 0; }
         constructed_run_cmds=$(_construct_run_cmds) || exit $?
-        if [ "$(docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.run_opts"}}' "$name" 2>/dev/null)" != "$constructed_run_cmds" ]; then
+        if [ "$(docker inspect -f '{{index .Config.Labels "docker-sh.winto.dev/run_opts"}}' "$name" 2>/dev/null)" != "$constructed_run_cmds" ]; then
           printf 'different_opts '
         fi
         if [ "$(docker inspect --type image -f '{{.Id}}' "$image" 2>/dev/null)" != "$(docker inspect --type container -f '{{.Image}}' "$name" 2>/dev/null)" ]; then
@@ -428,7 +403,7 @@ _main() {
 
     show_running_cmds)
       if exists container "$name"; then
-        exec docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.run_opts"}}' "$name"
+        exec docker inspect -f '{{index .Config.Labels "docker-sh.winto.dev/run_opts"}}' "$name"
         exit 1
       else
         panic "container not exists"
@@ -540,7 +515,7 @@ if grep -qF 6245455020934bb2ad75ce52bbdc54b7 "$0" 2>/dev/null; then
         "curl -sSLf https://raw.githubusercontent.com/win-t/docker-sh/master/install.sh | sudo sh -s - \"$0\""
       ;;
     locate)
-      exec docker inspect -f '{{index .Config.Labels "kurnia_d_win.docker.initial_spec_file"}}' "${2:-}"
+      exec docker inspect -f '{{index .Config.Labels "docker-sh.winto.dev/initial_spec_file"}}' "${2:-}"
       ;;
     *)  panic "Usage: $0 <file> <command> [args...]" ;;
     esac
@@ -551,7 +526,7 @@ if grep -qF 6245455020934bb2ad75ce52bbdc54b7 "$0" 2>/dev/null; then
   file="$dir/$(basename "$file")"
   filename=$(basename "$file")
   dirname=$(basename "$dir")
-  dirsum=$(calc_cksum "$(hostname 2>/dev/null || :):${dir}")
+  dirsum=$(calc_cksum "$(docker info -f '{{.ID}}' 2>/dev/null || :):${dir}")
   name="$dirname-$filename-$dirsum"
   name=$(printf %s "$name" | LC_ALL=C tr -cd '[:alnum:]-')
   . "$file" || panic "error processing $file"

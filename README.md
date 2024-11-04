@@ -1,29 +1,29 @@
-## Deprecated
-this project predates [docker compose], most of the use cases are already covered by [docker compose]
-
-I'm no longer maintaining this project
-
-[docker compose]: https://docs.docker.com/compose/
-
 # Docker utility script
 
-This is simple POSIX script for managing docker container, just like `docker-compose` for single container, but more powerful.
-
-Because this is POSIX shell script, the possibility is limitless.
+This is simple POSIX script for managing docker container, just like `docker-compose` for single container.
 
 This approach is inspired by openrc from gentoo, ebuild from gentoo, PKGBUILD from archlinux, and APKBUILD from alpine.
 
 This script is written with POSIX shell standard, so it will work with `bash`, `ash`, `dash` or any shell that follow POSIX standard.
 
+## Why not docker compose
+this project predates [docker compose]
+
+[docker compose]: https://docs.docker.com/compose/
+
 ## How to install
 
 To install in default location (`/usr/local/bin/docker.sh`)
 
-    curl -sSLf https://raw.githubusercontent.com/win-t/docker-sh/master/install.sh | sudo sh
+    curl -sSLf get.winto.dev/docker-sh | sudo sh
 
 or to custom location, e.g. `/opt/bin/docker.sh`
 
-    curl -sSLf https://raw.githubusercontent.com/win-t/docker-sh/master/install.sh | sudo sh -s - /opt/bin/docker.sh
+    curl -sSLf get.winto.dev/docker-sh | sudo sh -s - /opt/bin/docker.sh
+
+## How to upgrade
+
+    docker.sh upgrade
 
 ## How to use it
 

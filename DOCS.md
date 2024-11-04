@@ -17,30 +17,30 @@ then make it executable by `chmod +x nginx`, after that, you can execute this fi
 
 Some variable will be pre-defined before execute/evaluate your spec file (do not edit these var):
 
-| Variable name | Description |
-| --- | --- |
-| `dir` | The directory fullpath contain the spec file (may contain space) |
-| `file` | The fullpath of the spec file (may contain space) |
-| `dirname` | The directory name of spec file (name only, without path, may contain space) |
-| `filename` | The name of the spec file (name only, without path, may contain space) |
-| `dirsum` | The checksum of `$dir` calculated using `calc_cksum` (see below) function. Useful for avoiding name collision (see example for usage) |
+| Variable name | Description                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `dir`         | The directory fullpath contain the spec file (may contain space)                                                                      |
+| `file`        | The fullpath of the spec file (may contain space)                                                                                     |
+| `dirname`     | The directory name of spec file (name only, without path, may contain space)                                                          |
+| `filename`    | The name of the spec file (name only, without path, may contain space)                                                                |
+| `dirsum`      | The checksum of `$dir` calculated using `calc_cksum` (see below) function. Useful for avoiding name collision (see example for usage) |
 
 You should define following variable:
 
-| Variable name | Description |
-| --- | --- |
-| `image` (**required**) | image to be used for this container|
-| `name`| name of the container, if you don't specify this var the value will be `$dirname-$filename-$dirsum` |
-| `net`| If network not exists yet, it will be created for you. This network will be removed when last container attach to it removed. |
-| `opts` | options to be used for this container, see `docker create --help` |
-| `args` | argument to be used for this container, see `docker create --help` |
-| `stop_opts` | options to be used for `docker stop`, see `docker stop --help` |
-| `rm_opts` | options to be used for `docker rm`, see `docker rm --help` |
-| `kill_opts` | options to be used for `docker kill`, see `docker kill --help` |
-| `must_local` | If set to `y`, it will ensure docker daemon is running on local machine, useful if you want to use bind-mount. |
-| `create_only` | If set to `y`, `start` command will only create the container, but won't run it. |
-| `skip_real_pull` | If set to `y`, `pull` command will not run `docker pull` to pull the image |
-| `isolate_net` | If set to `y` and `net` is not set, `net` will be set to `$dirname-$dirsum`
+| Variable name          | Description                                                                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `image` (**required**) | image to be used for this container                                                                                           |
+| `name`                 | name of the container, if you don't specify this var the value will be `$dirname-$filename-$dirsum`                           |
+| `net`                  | If network not exists yet, it will be created for you. This network will be removed when last container attach to it removed. |
+| `opts`                 | options to be used for this container, see `docker create --help`                                                             |
+| `args`                 | argument to be used for this container, see `docker create --help`                                                            |
+| `stop_opts`            | options to be used for `docker stop`, see `docker stop --help`                                                                |
+| `rm_opts`              | options to be used for `docker rm`, see `docker rm --help`                                                                    |
+| `kill_opts`            | options to be used for `docker kill`, see `docker kill --help`                                                                |
+| `create_only`          | If set to `y`, `start` command will only create the container, but won't run it.                                              |
+| `skip_real_pull`       | If set to `y`, `pull` command will not run `docker pull` to pull the image                                                    |
+| `isolate_net`          | If set to `y` and `net` is not set, `net` will be set to `$dirname-$dirsum`                                                   |
+| `docker`               | which command line to be used, default to `docker`, can be change to anything that compatible with docker cli, like `nerdctl` |
 
 *NOTE*: You can use `show_cmds` (see below) to see the final result of constructed argument.
 
@@ -48,18 +48,18 @@ You should define following variable:
 
 Hook function that you can define:
 
-| Hook function | Description |
-| --- | --- |
-| `pre_start` | see `start` command below |
-| `post_start`| see `start` command below |
-| `pre_stop` | |
-| `post_stop` | |
-| `pre_restart` | |
-| `post_restart` | |
-| `pre_rm` | |
-| `post_rm` | |
-| `pre_pull` | |
-| `post_pull` | |
+| Hook function  | Description               |
+| -------------- | ------------------------- |
+| `pre_start`    | see `start` command below |
+| `post_start`   | see `start` command below |
+| `pre_stop`     |                           |
+| `post_stop`    |                           |
+| `pre_restart`  |                           |
+| `post_restart` |                           |
+| `pre_rm`       |                           |
+| `post_rm`      |                           |
+| `pre_pull`     |                           |
+| `post_pull`    |                           |
 
 ## Predefined function
 

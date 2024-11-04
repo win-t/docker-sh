@@ -1,7 +1,6 @@
 #!/usr/bin/env docker.sh
 
 image=mariadb:latest
-must_local=y
 net=net-$dirsum
 opts="
   -v '$dir/data:/var/lib/mysql'

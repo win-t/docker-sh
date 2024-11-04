@@ -1,7 +1,6 @@
 #!/usr/bin/env docker.sh
 
 image=jenkins/jenkins
-must_local=y
 opts_vol="-v '$dir/jenkins_home:/var/jenkins_home'"
 opts="
   -p 8080:8080

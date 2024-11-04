@@ -1,13 +1,13 @@
 #!/usr/bin/env docker.sh
 
 image=postgres:alpine
-must_local=y
 net=net0
 opts="
   --network-alias postgres
   --restart always
   -v '$dir/data:/var/lib/postgresql/data'
   -p 5432:5432
+  -e POSTGRES_PASSWORD=password
 
   --log-driver json-file
   --log-opt max-size=50m

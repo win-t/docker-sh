@@ -1,7 +1,6 @@
 #!/usr/bin/env docker.sh
 
 image=thajeztah/pgadmin4
-must_local=y
 net=net0
 opts_vol="-v '$dir/data:/pgadmin'"
 opts="
